@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Shashop",
-  description: "Shashop - The best online shop for all your needs.",
+  title: "Tsevire",
+  description: "Tsevire - The best online shop for all your needs.",
 };
 
 export default function RootLayout({

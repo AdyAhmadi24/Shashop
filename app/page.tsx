@@ -2,9 +2,13 @@
 
 import { Suspense, useState } from 'react';
 import Link from 'next/link';
-import Catalog from '../components/Catalog';
 import LoginModal from '../components/LoginModal';
 import { ShoppingBag, Search, User, Heart, Menu, LogOut } from 'lucide-react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 export default function Home() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -25,13 +29,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-sm shadow-sm border-b border-rose-100 sticky top-0 z-50">
+      <header className="bg-transparent backdrop-blur-sm shadow-sm border-b border-rose-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-2">
-              <ShoppingBag className="h-8 w-8 text-rose-400" />
               <h1 className="text-2xl font-light bg-gradient-to-r from-rose-400 to-pink-400 bg-clip-text text-transparent">
-                Shashop
+                Tsevire
               </h1>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -82,43 +85,205 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-rose-100 via-pink-50 to-purple-100 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-light mb-6 text-gray-800">
-            {isLoggedIn ? `Welcome back, ${userEmail.split('@')[0]}!` : 'Elegant Collection'}
-          </h2>
-          <p className="text-lg mb-8 text-gray-600 max-w-2xl mx-auto font-light">
-            {isLoggedIn
-              ? 'Discover your personalized recommendations and exclusive offers.'
-              : 'Discover our curated selection of premium clothing and accessories, designed for the modern woman.'
-            }
-          </p>
-          <Link href="/catalogue">
-            <button className="bg-rose-400 text-white px-8 py-3 rounded-full font-light hover:bg-rose-500 transition-colors shadow-sm">
-              {isLoggedIn ? 'Browse Collection' : 'Explore Collection'}
-            </button>
-          </Link>
-        </div>
+      {/* Hero Section - Carousel */}
+      <section className="relative w-full h-[80vh] overflow-hidden">
+        <Swiper
+          modules={[Pagination, Navigation]}
+          spaceBetween={0}
+          slidesPerView={1}
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          loop={true}
+          className="w-full h-full"
+        >
+          {/* Slide 1 */}
+          <SwiperSlide>
+            <div className="relative w-full h-full bg-gradient-to-r from-rose-100 via-pink-50 to-purple-100 flex items-center justify-center">
+              <img
+                src="/carousel/carousel1.webp"
+                alt="Elegant Collection"
+                className="absolute inset-0 w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              {/* <div className="relative z-10 text-center text-white bg-black/50 p-8 rounded-lg max-w-2xl mx-auto">
+                <h2 className="text-4xl md:text-5xl font-light mb-6">
+                  {isLoggedIn ? `Welcome back, ${userEmail.split('@')[0]}!` : 'Elegant Collection'}
+                </h2>
+                <p className="text-lg mb-8 max-w-xl mx-auto font-light">
+                  {isLoggedIn
+                    ? 'Discover your personalized recommendations and exclusive offers.'
+                    : 'Discover our curated selection of premium clothing and accessories, designed for the modern woman.'
+                  }
+                </p>
+                <Link href="/catalogue">
+                  <button className="bg-rose-400 text-white px-8 py-3 rounded-full font-light hover:bg-rose-500 transition-colors shadow-sm">
+                    {isLoggedIn ? 'Browse Collection' : 'Explore Collection'}
+                  </button>
+                </Link>
+              </div> */}
+            </div>
+          </SwiperSlide>
+
+          {/* Slide 2 */}
+          <SwiperSlide>
+            <div className="relative w-full h-full bg-gradient-to-r from-purple-100 via-indigo-50 to-blue-100 flex items-center justify-center">
+              <img
+                src="/carousel/carousel2.webp"
+                alt="New Arrivals"
+                className="absolute inset-0 w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              {/* <div className="relative z-10 text-center text-white bg-black/50 p-8 rounded-lg max-w-2xl mx-auto">
+                <h2 className="text-4xl md:text-5xl font-light mb-6">New Arrivals</h2>
+                <p className="text-lg mb-8 max-w-xl mx-auto font-light">
+                  Be the first to explore our latest fashion trends and exclusive pieces.
+                </p>
+                <Link href="/catalogue">
+                  <button className="bg-purple-400 text-white px-8 py-3 rounded-full font-light hover:bg-purple-500 transition-colors shadow-sm">
+                    Shop Now
+                  </button>
+                </Link>
+              </div> */}
+            </div>
+          </SwiperSlide>
+
+          {/* Slide 3 */}
+          <SwiperSlide>
+            <div className="relative w-full h-full bg-gradient-to-r from-pink-100 via-rose-50 to-red-100 flex items-center justify-center">
+              <img
+                src="/carousel/carousel3.webp"
+                alt="Special Offers"
+                className="absolute inset-0 w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              {/* <div className="relative z-10 text-center text-white bg-black/50 p-8 rounded-lg max-w-2xl mx-auto">
+                <h2 className="text-4xl md:text-5xl font-light mb-6">Special Offers</h2>
+                <p className="text-lg mb-8 max-w-xl mx-auto font-light">
+                  Enjoy exclusive discounts on selected items. Limited time only!
+                </p>
+                <Link href="/catalogue">
+                  <button className="bg-pink-400 text-white px-8 py-3 rounded-full font-light hover:bg-pink-500 transition-colors shadow-sm">
+                    View Offers
+                  </button>
+                </Link>
+              </div> */}
+            </div>
+          </SwiperSlide>
+        </Swiper>
       </section>
 
-      {/* Catalog Section */}
+      {/* Category Cards Section */}
       <main className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h3 className="text-2xl font-light text-gray-800 mb-4">
-            {isLoggedIn ? 'Your Personalized Picks' : 'New Arrivals'}
+            {isLoggedIn ? 'Shop by Category' : 'Shop by Category'}
           </h3>
           <p className="text-gray-500 max-w-xl mx-auto font-light">
-            {isLoggedIn ? 'Curated just for you' : 'Fresh styles for the season'}
+            {isLoggedIn ? 'Explore our curated collections' : 'Find your perfect style in our specialized categories'}
           </p>
         </div>
-        <Suspense fallback={
-          <div className="flex justify-center items-center py-16">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-400"></div>
-          </div>
-        }>
-          <Catalog />
-        </Suspense>
+
+        {/* Category Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Hijab Card */}
+          <Link href="/hijab" className="group">
+            <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-rose-50 group-hover:border-rose-200">
+              <div className="relative h-64 flex items-center justify-center">
+                <img
+                  src="/produk/phasmina-bubblegum.webp"
+                  alt="Phasmina Bubblegum"
+                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                <img
+                  src="/produk/phasmina-butter.webp"
+                  alt="Phasmina Butter"
+                  className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+              </div>
+              <div className="p-6 text-center">
+                <h4 className="text-lg font-light text-gray-800 mb-2 group-hover:text-rose-600 transition-colors">
+                  Hijab Collection
+                </h4>
+                <p className="text-sm text-gray-500 font-light">
+                  Elegant and modest hijab styles
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          {/* Upper Body Card */}
+          <Link href="/upper-body" className="group">
+            <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-rose-50 group-hover:border-rose-200">
+              <div className="relative h-64 bg-gradient-to-br from-purple-100 to-indigo-100 flex items-center justify-center">
+                <div className="text-6xl"></div>
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+              </div>
+              <div className="p-6 text-center">
+                <h4 className="text-lg font-light text-gray-800 mb-2 group-hover:text-purple-600 transition-colors">
+                  dummy
+                </h4>
+                <p className="text-sm text-gray-500 font-light">
+                  piupiu
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          {/* Lower Body Card */}
+          <Link href="/lower-body" className="group">
+            <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-rose-50 group-hover:border-rose-200">
+              <div className="relative h-64 bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center">
+                <div className="text-6xl"></div>
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+              </div>
+              <div className="p-6 text-center">
+                <h4 className="text-lg font-light text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
+                  dummy
+                </h4>
+                <p className="text-sm text-gray-500 font-light">
+                  piupiu
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          {/* Accessories Card */}
+          <Link href="/accessories" className="group">
+            <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-rose-50 group-hover:border-rose-200">
+              <div className="relative h-64 bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center">
+                <div className="text-6xl"></div>
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+              </div>
+              <div className="p-6 text-center">
+                <h4 className="text-lg font-light text-gray-800 mb-2 group-hover:text-emerald-600 transition-colors">
+                  dummy
+                </h4>
+                <p className="text-sm text-gray-500 font-light">
+                  piupiu
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
       </main>
 
       {/* Footer */}
@@ -128,7 +293,7 @@ export default function Home() {
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <ShoppingBag className="h-6 w-6 text-rose-400" />
-                <span className="text-lg font-light">Shashop</span>
+                <span className="text-lg font-light">Tsevire</span>
               </div>
               <p className="text-gray-500 text-sm font-light">
                 Premium fashion for every occasion.
@@ -171,7 +336,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-rose-100 mt-8 pt-8 text-center text-gray-500 text-sm font-light">
-            <p>&copy; 2025 Shashop. All rights reserved.</p>
+            <p>&copy; 2025 Tsevire. All rights reserved.</p>
           </div>
         </div>
       </footer>

@@ -19,7 +19,7 @@ export default function CataloguePage() {
               <div className="flex items-center space-x-2">
                 <ShoppingBag className="h-8 w-8 text-amber-600" />
                 <h1 className="text-2xl font-light bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                  Shashop Collection
+                  Tsevire Collection
                 </h1>
               </div>
             </div>
@@ -90,7 +90,7 @@ export default function CataloguePage() {
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <ShoppingBag className="h-6 w-6 text-amber-600" />
-                <span className="text-lg font-light text-amber-800">Shashop</span>
+                <span className="text-lg font-light text-amber-800">Tsevire</span>
               </div>
               <p className="text-amber-600 text-sm font-light">
                 Curated fashion for the modern lifestyle.
@@ -133,7 +133,7 @@ export default function CataloguePage() {
             </div>
           </div>
           <div className="border-t border-amber-200 mt-8 pt-8 text-center text-amber-600 text-sm font-light">
-            <p>&copy; 2025 Shashop Collection. All rights reserved.</p>
+            <p>&copy; 2025 Tsevire Collection. All rights reserved.</p>
           </div>
         </div>
       </footer>

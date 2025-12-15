@@ -11,14 +11,20 @@ interface Product {
   image: string;
 }
 
-export default function Catalog() {
+interface CatalogProps {
+  products?: Product[];
+  theme?: 'rose' | 'amber' | 'emerald' | 'purple' | 'blue';
+  carousel?: boolean;
+}
+
+export default function Catalog({ products: propProducts, theme = 'rose', carousel = true }: CatalogProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
-  // Static mock data - no fetching needed
-  const products: Product[] = [
+  // Use provided products or fallback to default
+  const products: Product[] = propProducts || [
     { item_id: 1, item_name: 'Vintage Denim Jacket', price: 127.50, image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=500&fit=crop&crop=center' },
     { item_id: 2, item_name: 'Floral Maxi Dress', price: 89.99, image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=500&fit=crop&crop=center' },
     { item_id: 3, item_name: 'Classic White Blouse', price: 65.75, image: 'https://images.unsplash.com/photo-1551163943-3f6a855d2807?w=400&h=500&fit=crop&crop=center' },
@@ -44,7 +50,53 @@ export default function Catalog() {
     setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
   };
 
-  const visibleProducts = products.slice(currentSlide * 4, (currentSlide + 1) * 4);
+  // Theme-based colors
+  const themeColors = {
+    rose: {
+      bg: 'bg-rose-100',
+      hoverBg: 'hover:bg-rose-200',
+      text: 'text-rose-600',
+      border: 'border-rose-50',
+      hoverBorder: 'hover:border-rose-200',
+      hoverText: 'hover:text-rose-600',
+    },
+    amber: {
+      bg: 'bg-amber-100',
+      hoverBg: 'hover:bg-amber-200',
+      text: 'text-amber-600',
+      border: 'border-amber-50',
+      hoverBorder: 'hover:border-amber-200',
+      hoverText: 'hover:text-amber-600',
+    },
+    emerald: {
+      bg: 'bg-emerald-100',
+      hoverBg: 'hover:bg-emerald-200',
+      text: 'text-emerald-600',
+      border: 'border-emerald-50',
+      hoverBorder: 'hover:border-emerald-200',
+      hoverText: 'hover:text-emerald-600',
+    },
+    purple: {
+      bg: 'bg-purple-100',
+      hoverBg: 'hover:bg-purple-200',
+      text: 'text-purple-600',
+      border: 'border-purple-50',
+      hoverBorder: 'hover:border-purple-200',
+      hoverText: 'hover:text-purple-600',
+    },
+    blue: {
+      bg: 'bg-blue-100',
+      hoverBg: 'hover:bg-blue-200',
+      text: 'text-blue-600',
+      border: 'border-blue-50',
+      hoverBorder: 'hover:border-blue-200',
+      hoverText: 'hover:text-blue-600',
+    },
+  };
+
+  const colors = themeColors[theme];
+
+  const visibleProducts = carousel ? products.slice(currentSlide * 4, (currentSlide + 1) * 4) : products;
 
   const openModal = (product: Product) => {
     setSelectedProduct(product);
@@ -62,41 +114,43 @@ export default function Catalog() {
 
   return (
     <div className="relative max-w-7xl mx-auto">
-      {/* Navigation Buttons */}
-      <div className="flex justify-between items-center mb-8">
-        <button
-          onClick={prevSlide}
-          className="p-3 bg-amber-100 hover:bg-amber-200 rounded-full transition-colors duration-200 shadow-sm"
-          disabled={currentSlide === 0}
-        >
-          <ChevronLeft className="h-5 w-5 text-amber-600" />
-        </button>
-        <div className="flex space-x-2">
-          {Array.from({ length: totalSlides }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentSlide(i)}
-              className={`w-2 h-2 rounded-full transition-colors duration-200 ${
-                i === currentSlide ? 'bg-amber-500' : 'bg-amber-200'
-              }`}
-            />
-          ))}
+      {/* Navigation Buttons - only show if carousel */}
+      {carousel && (
+        <div className="flex justify-between items-center mb-8">
+          <button
+            onClick={prevSlide}
+            className={`p-3 ${colors.bg} ${colors.hoverBg} rounded-full transition-colors duration-200 shadow-sm`}
+            disabled={currentSlide === 0}
+          >
+            <ChevronLeft className={`h-5 w-5 ${colors.text}`} />
+          </button>
+          <div className="flex space-x-2">
+            {Array.from({ length: totalSlides }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentSlide(i)}
+                className={`w-2 h-2 rounded-full transition-colors duration-200 ${
+                  i === currentSlide ? colors.text : 'bg-gray-200'
+                }`}
+              />
+            ))}
+          </div>
+          <button
+            onClick={nextSlide}
+            className={`p-3 ${colors.bg} ${colors.hoverBg} rounded-full transition-colors duration-200 shadow-sm`}
+            disabled={currentSlide === totalSlides - 1}
+          >
+            <ChevronRight className={`h-5 w-5 ${colors.text}`} />
+          </button>
         </div>
-        <button
-          onClick={nextSlide}
-          className="p-3 bg-amber-100 hover:bg-amber-200 rounded-full transition-colors duration-200 shadow-sm"
-          disabled={currentSlide === totalSlides - 1}
-        >
-          <ChevronRight className="h-5 w-5 text-amber-600" />
-        </button>
-      </div>
+      )}
 
       {/* Product Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className={`grid gap-6 ${carousel ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}`}>
         {visibleProducts.map((product) => (
           <div
             key={product.item_id}
-            className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group border border-amber-50 cursor-pointer"
+            className={`bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group border ${colors.border} cursor-pointer`}
             onClick={() => openModal(product)}
           >
             <div className="relative overflow-hidden">
@@ -107,15 +161,15 @@ export default function Catalog() {
                 width={300}
                 height={256}
               />
-              <button className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-amber-50">
-                <Heart className="h-4 w-4 text-gray-600 hover:text-amber-600" />
+              <button className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-gray-50">
+                <Heart className="h-4 w-4 text-gray-600 hover:text-red-600" />
               </button>
             </div>
             <div className="p-4 text-center">
-              <h3 className="text-sm font-light text-gray-800 mb-2 line-clamp-2 group-hover:text-amber-600 transition-colors">
+              <h3 className={`text-sm font-light text-gray-800 mb-2 line-clamp-2 group-hover:${colors.hoverText} transition-colors`}>
                 {product.item_name}
               </h3>
-              <div className="text-lg font-light text-amber-600">
+              <div className={`text-lg font-light ${colors.text}`}>
                 ${product.price}
               </div>
             </div>

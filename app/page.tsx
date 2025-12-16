@@ -86,7 +86,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section - Carousel */}
-      <section className="relative w-full h-[80vh] overflow-hidden">
+      <section className="relative w-full h-[60vh] md:h-[70vh] lg:h-[80vh] overflow-hidden">
         <Swiper
           modules={[Pagination, Navigation]}
           spaceBetween={0}
@@ -97,8 +97,19 @@ export default function Home() {
           }}
           pagination={{
             clickable: true,
+            dynamicBullets: true,
           }}
-          navigation={true}
+          navigation={{
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          }}
+          breakpoints={{
+            640: {
+              navigation: {
+                enabled: true,
+              },
+            },
+          }}
           loop={true}
           className="w-full h-full"
         >

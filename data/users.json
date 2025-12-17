@@ -1,0 +1,33 @@
+[
+  {
+    "id": "user1",
+    "email": "john@example.com",
+    "name": "John Doe",
+    "password": "$2a$10$hashedpassword",
+    "createdAt": "2025-12-17T00:00:00.000Z",
+    "orders": [],
+    "wishlist": [],
+    "addresses": [
+      {
+        "id": "addr1",
+        "type": "shipping",
+        "street": "123 Main St",
+        "city": "Jakarta",
+        "state": "DKI Jakarta",
+        "zipCode": "12345",
+        "country": "Indonesia",
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "id": "user1765956303985",
+    "email": "ady@gmail.com",
+    "name": "Ady",
+    "password": "$2b$10$NfZBN.Hhc5PaagtWR3vwZ.Lj1ujobY3wRDzk5x.H8R.dwKia5QRrG",
+    "createdAt": "2025-12-17T07:25:03.985Z",
+    "orders": [],
+    "wishlist": [],
+    "addresses": []
+  }
+]

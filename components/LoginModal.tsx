@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import { X, Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
+import { useAuth } from '../app/context/AuthContext';
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLogin: (email: string, password: string, name?: string) => void;
 }
 
-export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
+export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+  const { login } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,28 +26,67 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
     setError('');
     setIsLoading(true);
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      if (isSignUp) {
+        // Sign up validation
+        if (password !== confirmPassword) {
+          setError('Passwords do not match');
+          setIsLoading(false);
+          return;
+        }
+        if (password.length < 6) {
+          setError('Password must be at least 6 characters');
+          setIsLoading(false);
+          return;
+        }
 
-    if (isSignUp) {
-      // Sign up validation
-      if (password !== confirmPassword) {
-        setError('Passwords do not match');
-        setIsLoading(false);
-        return;
+        // Register API call
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, password }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          setError(data.error || 'Registration failed');
+          setIsLoading(false);
+          return;
+        }
+
+        // Store token and user data via context
+        login(data.user, data.token);
+      } else {
+        // Login API call
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          setError(data.error || 'Login failed');
+          setIsLoading(false);
+          return;
+        }
+
+        // Store token and user data via context
+        login(data.user, data.token);
       }
-      if (password.length < 6) {
-        setError('Password must be at least 6 characters');
-        setIsLoading(false);
-        return;
-      }
-      // In a real app, this would create a new account
-      console.log('Signing up with:', { name, email, password });
+
+      setIsLoading(false);
+      onClose();
+    } catch (error) {
+      setError('Network error. Please try again.');
+      setIsLoading(false);
     }
-
-    onLogin(email, password, isSignUp ? name : undefined);
-    setIsLoading(false);
-    onClose();
   };
 
   const toggleMode = () => {
@@ -103,7 +143,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent font-light"
+                  className="w-full pl-10 pr-4 py-3 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent font-light text-gray-900 placeholder-gray-500"
                   placeholder="Enter your full name"
                   required
                 />
@@ -123,7 +163,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent font-light"
+                className="w-full pl-10 pr-4 py-3 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent font-light text-gray-900 placeholder-gray-500"
                 placeholder="Enter your email"
                 required
               />
@@ -142,7 +182,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-12 py-3 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent font-light"
+                className="w-full pl-10 pr-12 py-3 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent font-light text-gray-900 placeholder-gray-500"
                 placeholder="Enter your password"
                 required
               />
@@ -169,7 +209,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-10 pr-12 py-3 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent font-light"
+                  className="w-full pl-10 pr-12 py-3 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent font-light text-gray-900 placeholder-gray-500"
                   placeholder="Confirm your password"
                   required
                 />

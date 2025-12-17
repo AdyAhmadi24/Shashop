@@ -1,24 +1,164 @@
-# Tsevire - Online Shop Catalog Connected to Shopee
+# Tsevire - Online Shop with Authentication
 
-This is a Next.js project that displays a product catalog connected to Shopee.
+A modern e-commerce website built with Next.js, featuring user authentication, product catalog, and responsive design.
 
 ## Features
 
-- Product catalog display
-- Integration with Shopee API to fetch products
-- Responsive design with Tailwind CSS
+- 🔐 **User Authentication**: JWT-based login/register system
+- 🛒 **Product Catalog**: Display products with categories
+- 👤 **User Dashboard**: Protected user profile page
+- 🎨 **Modern UI**: Responsive design with Tailwind CSS and custom components
+- ⚡ **Fast Performance**: Built with Next.js 16 and optimized for production
+
+## Tech Stack
+
+- **Frontend**: Next.js 16, React 19, TypeScript
+- **Styling**: Tailwind CSS, Lucide Icons
+- **Authentication**: JWT tokens, bcryptjs
+- **Deployment**: Vercel-ready with serverless functions
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 18+
-- Shopee Partner Account
+- npm or yarn
 
 ### Installation
 
 1. Clone the repository
-2. Install dependencies:
+
+```bash
+git clone <repository-url>
+cd tsevire
+```
+
+2. Install dependencies
+
+```bash
+npm install
+```
+
+3. Set up environment variables
+
+```bash
+cp .env.local.example .env.local
+```
+
+Edit `.env.local` and add:
+
+```
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+```
+
+4. Run the development server
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Deployment to Vercel
+
+### Option 1: Deploy from GitHub (Recommended)
+
+1. **Push your code to GitHub**
+
+```bash
+git add .
+git commit -m "Ready for deployment"
+git push origin main
+```
+
+2. **Connect to Vercel**
+
+   - Go to [vercel.com](https://vercel.com)
+   - Click "New Project"
+   - Import your GitHub repository
+   - Vercel will auto-detect Next.js settings
+
+3. **Set Environment Variables**
+
+   - In Vercel dashboard, go to your project
+   - Navigate to Settings → Environment Variables
+   - Add: `JWT_SECRET` with a secure random string
+
+4. **Deploy**
+   - Click "Deploy"
+   - Your site will be live at `your-project.vercel.app`
+
+### Option 2: Deploy with Vercel CLI
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Login to Vercel
+vercel login
+
+# Deploy
+vercel
+
+# Set environment variables
+vercel env add JWT_SECRET
+```
+
+## API Routes
+
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `GET /api/user` - Get user profile (protected)
+- `PUT /api/user` - Update user profile (protected)
+
+## Important Notes
+
+### Data Storage
+
+Currently using in-memory storage for development/demo purposes. **Data will be lost on each deployment.**
+
+For production, consider:
+
+- Vercel KV (Redis)
+- Vercel Postgres
+- PlanetScale
+- MongoDB Atlas
+
+### Security
+
+- Change the `JWT_SECRET` in production
+- The JWT tokens expire in 1 hour
+- Passwords are hashed with bcryptjs
+
+## Project Structure
+
+```
+├── app/
+│   ├── api/
+│   │   ├── auth/
+│   │   └── user/
+│   ├── context/
+│   │   └── AuthContext.tsx
+│   └── (pages)/
+├── components/
+│   ├── LoginModal.tsx
+│   └── ...
+├── lib/
+│   └── storage.ts
+└── public/
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License. 2. Install dependencies:
 
 ```bash
 npm install

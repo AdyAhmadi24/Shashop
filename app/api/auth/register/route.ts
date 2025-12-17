@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import fs from 'fs';
-import path from 'path';
-
-const usersFilePath = path.join(process.cwd(), 'data', 'users.json');
+import { storage } from '../../../../lib/storage';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,14 +15,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Read existing users
-    let users = [];
-    if (fs.existsSync(usersFilePath)) {
-      const usersData = fs.readFileSync(usersFilePath, 'utf8');
-      users = JSON.parse(usersData);
-    }
+    const users = storage.getUsers();
 
     // Check if user already exists
-    const existingUser = users.find((user: any) => user.email === email);
+    const existingUser = storage.findUserByEmail(email);
     if (existingUser) {
       return NextResponse.json(
         { error: 'User already exists' },
@@ -37,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     // Create new user
     const newUser = {
-      id: `user${Date.now()}`,
+      id: uuidv4(),
       email,
       name,
       password: hashedPassword,
@@ -47,10 +41,8 @@ export async function POST(request: NextRequest) {
       addresses: []
     };
 
-    users.push(newUser);
-
-    // Write back to file
-    fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
+    // Add user to storage
+    storage.addUser(newUser);
 
     // Return user without password
     const { password: _, ...userWithoutPassword } = newUser;

@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import fs from 'fs';
-import path from 'path';
+import { storage } from '../../../lib/storage';
 
-const usersFilePath = path.join(process.cwd(), 'data', 'users.json');
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 export async function GET(request: NextRequest) {
@@ -21,15 +19,8 @@ export async function GET(request: NextRequest) {
     // Verify token
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; email: string };
 
-    // Read users
-    let users = [];
-    if (fs.existsSync(usersFilePath)) {
-      const usersData = fs.readFileSync(usersFilePath, 'utf8');
-      users = JSON.parse(usersData);
-    }
-
     // Find user
-    const user = users.find((u: any) => u.id === decoded.userId);
+    const user = storage.findUserById(decoded.userId);
     if (!user) {
       return NextResponse.json(
         { error: 'User not found' },
@@ -65,30 +56,33 @@ export async function PUT(request: NextRequest) {
 
     const { name, email } = await request.json();
 
-    // Read users
-    let users = [];
-    if (fs.existsSync(usersFilePath)) {
-      const usersData = fs.readFileSync(usersFilePath, 'utf8');
-      users = JSON.parse(usersData);
-    }
-
     // Find and update user
-    const userIndex = users.findIndex((u: any) => u.id === decoded.userId);
-    if (userIndex === -1) {
+    const user = storage.findUserById(decoded.userId);
+    if (!user) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
       );
     }
 
-    if (name) users[userIndex].name = name;
-    if (email) users[userIndex].email = email;
+    // Update user data
+    const updates: any = {};
+    if (name) updates.name = name;
+    if (email) updates.email = email;
 
-    // Write back
-    fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
+    storage.updateUser(decoded.userId, updates);
+
+    // Get updated user
+    const updatedUser = storage.findUserById(decoded.userId);
+    if (!updatedUser) {
+      return NextResponse.json(
+        { error: 'User not found after update' },
+        { status: 404 }
+      );
+    }
 
     // Return updated user without password
-    const { password: _, ...userWithoutPassword } = users[userIndex];
+    const { password: _, ...userWithoutPassword } = updatedUser;
 
     return NextResponse.json({
       message: 'Profile updated successfully',

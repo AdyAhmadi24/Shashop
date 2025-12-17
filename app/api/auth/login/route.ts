@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import fs from 'fs';
-import path from 'path';
+import { storage } from '../../../../lib/storage';
 
-const usersFilePath = path.join(process.cwd(), 'data', 'users.json');
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 export async function POST(request: NextRequest) {
@@ -18,15 +16,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Read users
-    let users = [];
-    if (fs.existsSync(usersFilePath)) {
-      const usersData = fs.readFileSync(usersFilePath, 'utf8');
-      users = JSON.parse(usersData);
-    }
-
     // Find user
-    const user = users.find((u: any) => u.email === email);
+    const user = storage.findUserByEmail(email);
     if (!user) {
       return NextResponse.json(
         { error: 'Invalid credentials' },
